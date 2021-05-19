@@ -25,9 +25,9 @@ class myNavigationBar extends StatefulWidget {
 class _myNavigationBarState extends State<myNavigationBar> {
   int currentIndex = 0;
   final List<Widget> _children = [
+     UserPage(),
     HomePg(),
-    DriveMod(),
-    UserPage()
+    DriveMod()
   ];
 
   void onTappedBar(int index){
