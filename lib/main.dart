@@ -26,7 +26,7 @@ class _myNavigationBarState extends State<myNavigationBar> {
   int currentIndex = 0;
   final List<Widget> _children = [
      UserPage(),
-    HomePg(),
+    BluetoothApp(),
     DriveMod()
   ];
 
