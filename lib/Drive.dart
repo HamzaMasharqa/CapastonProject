@@ -27,7 +27,7 @@ class _DriveModState extends State<DriveMod> {
                             NeedlePointer(value: 0)],
                           annotations: <GaugeAnnotation>[
                             GaugeAnnotation(widget: Container(child:
-                            Text('0',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                            Text("0",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
                                 angle: 90, positionFactor: 0.5
                             )]
                       )])

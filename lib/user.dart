@@ -14,17 +14,17 @@ class _UserPageState extends State<UserPage> {
   File imageFile;
 
   _openCamera(BuildContext context) async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
+   //  var picture = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
-      imageFile = picture;
+      //imageFile = picture;
     });
     Navigator.of(context).pop();
   }
 
   _openGallary(BuildContext context) async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
+  //  var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState(() {
-      imageFile = picture;
+     // imageFile = picture;
     });
     Navigator.of(context).pop();
   }

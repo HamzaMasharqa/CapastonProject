@@ -1,4 +1,3 @@
-// For performing some operations asynchronously
 import 'dart:async';
 import 'dart:convert';
 
@@ -8,8 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import 'package:flutter_dnd/flutter_dnd.dart';
+
+
+void main() => runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +30,7 @@ class MyApp extends StatelessWidget {
 class BluetoothApp extends StatefulWidget {
   @override
   _BluetoothAppState createState() => _BluetoothAppState();
+
 }
 
 class _BluetoothAppState extends State<BluetoothApp> {
@@ -51,7 +57,7 @@ class _BluetoothAppState extends State<BluetoothApp> {
   };
 
   // To track whether the device is still connected to Bluetooth
-  bool get isConnected => connection != null && connection.isConnected;
+   bool get isConnected => connection != null && connection.isConnected;
 
   // Define some variables, which will be required later
   List<BluetoothDevice> _devicesList = [];
@@ -120,6 +126,16 @@ class _BluetoothAppState extends State<BluetoothApp> {
     return false;
   }
 
+
+  void enablednd() async {
+    if (await FlutterDnd.isNotificationPolicyAccessGranted) {
+      await FlutterDnd.setInterruptionFilter(FlutterDnd.INTERRUPTION_FILTER_NONE); // Turn on DND - All notifications are suppressed.
+    } else {
+      FlutterDnd.gotoPolicySettings();
+    }
+  }
+
+
   // For retrieving and storing the paired devices
   // in a list.
   Future<void> getPairedDevices() async {
@@ -144,15 +160,43 @@ class _BluetoothAppState extends State<BluetoothApp> {
     });
   }
 
+  Future<bool>_OnbackPressed()
+  {
+return showDialog(context: context,
+    builder:(BuildContext context)
+    {
+      if(isConnected)
+        {
+          enablednd();
+          return AlertDialog(
+              content:Text('You cannot Exit the App while the car is on !'));
+        }
+      else
+      return AlertDialog(
+      content:Text('Do you want to exit the app ?!'),
+        actions:<Widget>[
+             TextButton(
+             child:Text('No'),
+             onPressed: ()=>Navigator.pop(context,false),
+          ),
+          TextButton(
+            child:Text('Yes'),
+            onPressed: ()=>Navigator.pop(context,true),
+          ),
+        ]
+      );
+
+    });
+  }
   // Now, its time to build the UI
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return WillPopScope(
+      child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Flutter Bluetooth"),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.deepPurple,
           actions: <Widget>[
             FlatButton.icon(
               icon: Icon(
@@ -180,7 +224,9 @@ class _BluetoothAppState extends State<BluetoothApp> {
             ),
           ],
         ),
-        body: Container(
+        body: WillPopScope(
+          onWillPop:_OnbackPressed,
+
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
@@ -420,32 +466,6 @@ class _BluetoothAppState extends State<BluetoothApp> {
     }
   }
 
-  // void _onDataReceived(Uint8List data) {
-  //   // Allocate buffer for parsed data
-  //   int backspacesCounter = 0;
-  //   data.forEach((byte) {
-  //     if (byte == 8 || byte == 127) {
-  //       backspacesCounter++;
-  //     }
-  //   });
-  //   Uint8List buffer = Uint8List(data.length - backspacesCounter);
-  //   int bufferIndex = buffer.length;
-
-  //   // Apply backspace control character
-  //   backspacesCounter = 0;
-  //   for (int i = data.length - 1; i >= 0; i--) {
-  //     if (data[i] == 8 || data[i] == 127) {
-  //       backspacesCounter++;
-  //     } else {
-  //       if (backspacesCounter > 0) {
-  //         backspacesCounter--;
-  //       } else {
-  //         buffer[--bufferIndex] = data[i];
-  //       }
-  //     }
-  //   }
-  // }
-
   // Method to disconnect bluetooth
   void _disconnect() async {
     setState(() {
@@ -459,6 +479,7 @@ class _BluetoothAppState extends State<BluetoothApp> {
       setState(() {
         _connected = false;
         _isButtonUnavailable = false;
+
       });
     }
   }
