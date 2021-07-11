@@ -15,7 +15,6 @@ import 'SaveImageDemo.dart';
 
 void main() {
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -76,6 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircleAvatar(
+
                         backgroundColor: Colors.white,
                         radius: 50.0,
                         child: Icon(
@@ -127,13 +127,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
 class myNavigationBar extends StatefulWidget {
   @override
+
   _myNavigationBarState createState() => _myNavigationBarState();
+
 }
+
 
 class _myNavigationBarState extends State<myNavigationBar> {
   int currentIndex = 0;
 
-  final List<Widget> _children = [userPage(),bluetoothconn()];
+  final List<Widget> _children = [userPage(), BluetoothApp()];
 
   void onTappedBar(int index) {
     setState(() {

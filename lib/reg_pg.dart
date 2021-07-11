@@ -18,20 +18,27 @@ class reg_pg extends StatefulWidget {
 }
 
 class _UserPageState extends State<reg_pg> {
-  Future<File>  imageFile;
+  Future<File> imageFile;
   Image imageFromPreferences;
 
   TextEditingController namecontroler = new TextEditingController();
   TextEditingController surenamecontroler = new TextEditingController();
 
   Future<File> imageFile1;
+
   // Image imageFromPreferences;
 
   pickImageFromGallery(ImageSource source) {
     setState(() {
+      imageFile1 = ImagePicker.pickImage(source: ImageSource.gallery);
+      Timer(Duration(seconds: 1), () => loadImageFromPreferences());
+    });
+  }
 
-      imageFile1 = ImagePicker.pickImage(source: source);
-      Timer(Duration(seconds: 1), () =>  loadImageFromPreferences());
+  pickImageFromCamera(ImageSource source) {
+    setState(() {
+      imageFile1 = ImagePicker.pickImage(source: ImageSource.camera);
+      Timer(Duration(seconds: 1), () => loadImageFromPreferences());
     });
   }
 
@@ -47,8 +54,7 @@ class _UserPageState extends State<reg_pg> {
       });
     });
   }
-
-   imageFromGallery() {
+  imageFromCamera() {
     return FutureBuilder<File>(
       future: imageFile1,
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
@@ -57,7 +63,35 @@ class _UserPageState extends State<reg_pg> {
           //print(snapshot.data.path);
           Utility.saveImageToPreferences(
               Utility.base64String(snapshot.data.readAsBytesSync()));
-          return  const Text(
+          return const Text(
+            '',
+            textAlign: TextAlign.center,
+          );
+        } else if (null != snapshot.error) {
+          return const Text(
+            '',
+            textAlign: TextAlign.center,
+          );
+        } else {
+          return const Text(
+            '',
+            textAlign: TextAlign.center,
+          );
+        }
+      },
+    );
+  }
+
+  imageFromGallery() {
+    return FutureBuilder<File>(
+      future: imageFile1,
+      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            null != snapshot.data) {
+          //print(snapshot.data.path);
+          Utility.saveImageToPreferences(
+              Utility.base64String(snapshot.data.readAsBytesSync()));
+          return const Text(
             '',
             textAlign: TextAlign.center,
           );
@@ -81,7 +115,6 @@ class _UserPageState extends State<reg_pg> {
     print(surename);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
 
     print(prefs.getString("surename"));
 
@@ -109,7 +142,7 @@ class _UserPageState extends State<reg_pg> {
   //   });
   // }
 
-  _openGallary(ImageSource source)  {
+  _openGallary(ImageSource source) {
     setState(() {
       imageFile = ImagePicker.pickImage(source: source);
     });
@@ -117,8 +150,7 @@ class _UserPageState extends State<reg_pg> {
     Navigator.of(context).pop();
   }
 
-
-  Future<void> _ShowChoiseDialog(BuildContext context)  {
+  Future<void> _ShowChoiseDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -130,13 +162,10 @@ class _UserPageState extends State<reg_pg> {
                   FlatButton.icon(
                     icon: Icon(Icons.image),
                     onPressed: () {
-
                       // pickImageFromGallery(ImageSource.gallery);
                       // setState(() {
                       //   imageFromPreferences = null;
                       // });
-
-
                     },
                     label: Text('Image'),
                   ),
@@ -165,8 +194,8 @@ class _UserPageState extends State<reg_pg> {
       decoration: InputDecoration(
           border: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.teal,
-              )),
+            color: Colors.teal,
+          )),
           prefixIcon: Icon(
             Icons.person,
             color: Colors.teal,
@@ -180,7 +209,6 @@ class _UserPageState extends State<reg_pg> {
   Widget sureName() {
     return TextFormField(
       controller: surenamecontroler,
-
       validator: (value) {
         if (value.isEmpty) return "surename is not empty";
         return null;
@@ -188,11 +216,11 @@ class _UserPageState extends State<reg_pg> {
       decoration: InputDecoration(
           border: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.teal,
-              )),
+            color: Colors.lightBlue,
+          )),
           prefixIcon: Icon(
             Icons.person,
-            color: Colors.teal,
+            color: Colors.lightBlue,
           ),
           labelText: "Surename",
           helperText: "Surename Cant Be Empty",
@@ -245,7 +273,6 @@ class _UserPageState extends State<reg_pg> {
               child: InkWell(
                 onTap: () async {
                   _ShowChoiseDialog(context);
-
                 },
                 child: Icon(
                   Icons.camera_alt,
@@ -275,7 +302,7 @@ class _UserPageState extends State<reg_pg> {
                 },
                 child: Icon(
                   Icons.camera_alt,
-                  color: Colors.teal,
+                  color: Colors.lightBlue,
                   size: 28.0,
                 ),
               ),
@@ -285,81 +312,76 @@ class _UserPageState extends State<reg_pg> {
       );
     }
   }
-  // Widget imageFromGallery() {
-  //   return FutureBuilder<File>(
-  //     future: imageFile,
-  //     builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.done &&
-  //           null != snapshot.data) {
-  //         //print(snapshot.data.path);
-  //         Utility.saveImageToPreferences(
-  //             Utility.base64String(snapshot.data.readAsBytesSync()));
-  //         return Center(
-  //           child: Stack(
-  //             children: <Widget>[
-  //               CircleAvatar(
-  //                 radius: 80.0,
-  //
-  //                 backgroundImage: FileImage(snapshot.data),
-  //               ),
-  //               Positioned(
-  //                 bottom: 20.0,
-  //                 right: 20.0,
-  //                 child: InkWell(
-  //                   onTap: () async {
-  //                     // _decideImageView();
-  //
-  //                   },
-  //                   child: IconButton(icon:Icon(Icons.camera_alt,
-  //                     color: Colors.teal,
-  //                     size: 28.0,) ,onPressed: (){
-  //                     _openGallary(ImageSource.gallery);
-  //                     setState(() {
-  //                       imageFromPreferences = null;
-  //                     });
-  //                   },
-  //
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ); Image.file(
-  //           snapshot.data,
-  //         );
-  //       } else if (null != snapshot.error) {
-  //         return const Text(
-  //           'Error Picking Image',
-  //           textAlign: TextAlign.center,
-  //         );
-  //       } else {
-  //         return const Text(
-  //           'No Image Selected',
-  //           textAlign: TextAlign.center,
-  //         );
-  //       }
-  //     },
-  //   );
+
+  Future<void> _ShowChoise(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Make your choise'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  FlatButton.icon(
+                    icon: Icon(Icons.image),
+                    onPressed: () {
+                      pickImageFromGallery(ImageSource.gallery);
+                      setState() {
+                        // imageFromPreferences = null;
+                        imageFromGallery();
+                        loadImageFromPreferences();
+                        Timer(Duration(seconds: 1),
+                            () => loadImageFromPreferences());
+                      }
+                    },
+                    label: Text('Image'),
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  FlatButton.icon(
+                    icon: Icon(Icons.camera),
+                    onPressed: () {
+                      pickImageFromCamera(ImageSource.camera);
+                      setState() {
+                        // imageFromPreferences = null;
+                        imageFromCamera();
+                        loadImageFromPreferences();
+                        Timer(Duration(seconds: 1),
+                            () => loadImageFromPreferences());
+                      }
+                    },
+                    label: Text('Camera'),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   // }
   void logout() async {
     final pref = await SharedPreferences.getInstance();
     await pref.clear();
     print(" this is the logout function!!!!!!!!!!!!!!!!!!!!!!!");
-setState(() {
-  imageFromPreferences=null;
-});
-
+    setState(() {
+      imageFromPreferences = null;
+    });
   }
 
-  int i=0;
-  void loadimage() {
-    if(imageFromPreferences==null){loadImageFromPreferences();}
+  int i = 0;
 
-    if(imageFromPreferences!=null){
-      for(i;i<2;i++){loadImageFromPreferences();}
+  void loadimage() {
+    if (imageFromPreferences == null) {
+      loadImageFromPreferences();
     }
 
+    if (imageFromPreferences != null) {
+      for (i; i < 2; i++) {
+        loadImageFromPreferences();
+      }
+    }
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -368,12 +390,14 @@ setState(() {
     loadImageFromPreferences();
 
     imageFromGallery();
-    Timer.periodic(Duration(seconds: 1), (Timer t) =>setState(() {
-      imageFromPreferences;
-    }) );
-    Timer.periodic(Duration(seconds: 1), (Timer t) => loadimage() );
-
+    Timer.periodic(
+        Duration(seconds: 1),
+        (Timer t) => setState(() {
+              imageFromPreferences;
+            }));
+    Timer.periodic(Duration(seconds: 1), (Timer t) => loadimage());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -385,7 +409,6 @@ setState(() {
               loadImageFromPreferences();
             },
           ),
-
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
@@ -393,7 +416,7 @@ setState(() {
             },
           ),
         ],
-        title: Text('User Page'),
+        title: Text('Registration Page'),
       ),
       body: Container(
         child: Center(
@@ -404,67 +427,63 @@ setState(() {
 
               imageFromGallery(),
 
-              null == imageFromPreferences ?
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 200.0,
-                    height: 200.0,
-                    decoration: new BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
+              null == imageFromPreferences
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 200.0,
+                          height: 200.0,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white70,
+                            size: 200,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Colors.lightBlue,
+                            size: 28.0,
+                          ),
+                          onPressed: () {
+                            _ShowChoise(context);
+                            // pickImageFromGallery(ImageSource.gallery);
+                            // setState(() {
+                            //   // imageFromPreferences = null;
+                            //   imageFromGallery();
+                            //   loadImageFromPreferences();
+                            // });
+                          },
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 200.0,
+                          height: 200.0,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey,
+                            shape: BoxShape.circle,
+                          ),
+                          child: imageFromPreferences,
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Colors.teal,
+                            size: 28.0,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
-                    child:Icon(Icons.person,color: Colors.white70,size: 200,) ,
-                  ),
-
-                  IconButton(icon:Icon(Icons.camera_alt,
-                    color: Colors.teal,
-                    size: 28.0,) ,onPressed: (){
-
-                    pickImageFromGallery(ImageSource.gallery);
-                    setState(() {
-                      // imageFromPreferences = null;
-                      imageFromGallery();
-                      loadImageFromPreferences();
-                    });
-                  },
-
-                  ),
-                ],
-              )  :
-
-              Row(
-
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 200.0,
-                    height: 200.0,
-                    decoration: new BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                    child:imageFromPreferences ,
-                  ),
-                  IconButton(icon:Icon(Icons.camera_alt,
-                    color: Colors.teal,
-                    size: 28.0,) ,onPressed: (){
-
-                    pickImageFromGallery(ImageSource.gallery);
-                    setState(() {
-                      // imageFromPreferences = null;
-                      imageFromGallery();
-                      loadImageFromPreferences();
-                      Timer(Duration(seconds: 1), () =>  loadImageFromPreferences());
-                    });
-                  },
-
-                  ),
-
-                ],
-              ) ,
               nameval(),
               sureName(),
               RaisedButton(
@@ -472,8 +491,8 @@ setState(() {
                   Navigator.pop(context);
                   storeData(namecontroler.text, surenamecontroler.text);
 
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => loadingpg()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => loadingpg()));
                   // Navigator.pop(context);
 
                   // Navigator.of(context).push(MaterialPageRoute(

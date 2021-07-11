@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/reg_pg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -122,7 +123,7 @@ class _UserPageState extends State<userPage> {
     AlertDialog alert = AlertDialog(
       title: Text("AlertDialog"),
       content: Text(
-          "Would you like to continue learning how to use Flutter alerts?"),
+          "Would you like to continue using the application"),
       actions: [
         cancelButton,
         continueButton,
@@ -166,11 +167,19 @@ class _UserPageState extends State<userPage> {
       appBar: new AppBar(
         actions: [
           IconButton(
+              icon: Icon(Icons.mode_edit),
+              onPressed: () async {
+                //logout();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (BuildContext context) => reg_pg()));
+              }),
+          IconButton(
               icon: Icon(Icons.logout),
               onPressed: () async {
                 //logout();
                 await showAlertDialog(context);
               })
+
         ],
         title: Text('User Page'),
       ),

@@ -44,6 +44,7 @@ class _UserPageState extends State<UserPage> {
                       _openGallary(context);
                     },
                     label: Text('Image'),
+
                   ),
                   Padding(padding: EdgeInsets.all(8.0)),
                   FlatButton.icon(
