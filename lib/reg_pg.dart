@@ -185,6 +185,7 @@ class _UserPageState extends State<reg_pg> {
   }
 
   Widget nameval() {
+
     return TextFormField(
       controller: namecontroler,
       validator: (value) {
@@ -194,11 +195,11 @@ class _UserPageState extends State<reg_pg> {
       decoration: InputDecoration(
           border: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.teal,
+            color: Colors.lightBlue,
           )),
           prefixIcon: Icon(
             Icons.person,
-            color: Colors.teal,
+            color: Colors.lightBlue,
           ),
           labelText: "Name",
           helperText: "Name Cant Be Empty",
@@ -276,7 +277,7 @@ class _UserPageState extends State<reg_pg> {
                 },
                 child: Icon(
                   Icons.camera_alt,
-                  color: Colors.teal,
+                  color: Colors.lightBlue,
                   size: 28.0,
                 ),
               ),
@@ -484,6 +485,7 @@ class _UserPageState extends State<reg_pg> {
                         ),
                       ],
                     ),
+
               nameval(),
               sureName(),
               RaisedButton(
